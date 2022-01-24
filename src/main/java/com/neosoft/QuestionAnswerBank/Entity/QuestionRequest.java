@@ -28,4 +28,7 @@ public class QuestionRequest {
     @Column(length = 100)
     @NotEmpty(message = "company name must not be empty")
     private String companyName;
+
+
+    private Long userId;
 }

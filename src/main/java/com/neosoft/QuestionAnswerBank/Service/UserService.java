@@ -22,13 +22,17 @@ public interface UserService {
 
     public List<Question> getAllQuestions();
 
+    public Question getQuestionById(int questionId);
+
     public Question updateQuestion(Question question, int questionId);
 
     public Question deleteQuestion(int questionId);
 
     public List<QuestionRequest> getAllRequests();
 
-    public QuestionRequest addQuestionRequest(QuestionRequest questionRequest);
+    public QuestionRequest addQuestionRequest(Long userId, QuestionRequest questionRequest);
+
+    public List<QuestionRequest> getAllRequests(Long userId);
 
     public List<Question> getQuestionByCompanyName(String companyName);
 

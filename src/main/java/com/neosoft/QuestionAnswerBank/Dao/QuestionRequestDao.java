@@ -10,4 +10,5 @@ import java.util.List;
 public interface QuestionRequestDao extends JpaRepository<QuestionRequest, Integer> {
 
     List<QuestionRequest> findByCompanyName(String companyName);
+    List<QuestionRequest> findByUserId(Long userId);
 }

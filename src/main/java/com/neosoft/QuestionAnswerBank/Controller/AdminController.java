@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admin")
@@ -31,11 +32,11 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/company")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<Company>> getAllCompanies(){
-        return ResponseEntity.ok(userService.getAllCompanies());
-    }
+//    @GetMapping("/company")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    public ResponseEntity<List<Company>> getAllCompanies(){
+//        return ResponseEntity.ok(userService.getAllCompanies());
+//    }
 
 
 
@@ -66,10 +67,10 @@ public class AdminController {
     }
 
 
-    @GetMapping("/questions")
+    @GetMapping("/questions/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<Question>> getAllQuestions(){
-        return ResponseEntity.ok(userService.getAllQuestions());
+    public ResponseEntity<Question> getQuestionById(@PathVariable int id){
+        return ResponseEntity.ok(userService.getQuestionById(id));
     }
 
 
@@ -107,12 +108,12 @@ public class AdminController {
     }
 
 
-    @GetMapping("/questions/{companyName}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<Question>> getQuestionsByCompanyName(@PathVariable String companyName){
-
-        return ResponseEntity.ok(userService.getQuestionByCompanyName(companyName));
-    }
+//    @GetMapping("/questions/{companyName}")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    public ResponseEntity<List<Question>> getQuestionsByCompanyName(@PathVariable String companyName){
+//
+//        return ResponseEntity.ok(userService.getQuestionByCompanyName(companyName));
+//    }
 
 
 

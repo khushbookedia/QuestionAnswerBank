@@ -102,6 +102,7 @@ public class UserServiceImpl implements UserService{
         return questionDao.findAll();
     }
 
+    @Override
     public Question getQuestionById(int questionId){
         return questionDao.findById(questionId).orElseThrow(() -> new ResourceNotFoundException(HttpStatus.BAD_REQUEST,"Invalid Company Id"));
     }
@@ -111,16 +112,24 @@ public class UserServiceImpl implements UserService{
 
             Question savedQuestion = getQuestionById(questionId);
 
-            savedQuestion.setDescription(question.getDescription());
-            savedQuestion.setAnswer(question.getAnswer());
-            savedQuestion.setQuestionId(question.getQuestionId());
+            String companyName = question.getCompanyName();
 
-            try {
-                return questionDao.save(savedQuestion);
+            Company savedCompany = getCompany(companyName);
+
+            if(savedCompany!=null) {
+
+                savedQuestion.setDescription(question.getDescription());
+                savedQuestion.setAnswer(question.getAnswer());
+                savedQuestion.setCompanyName(question.getCompanyName());
+
+                try {
+                    return questionDao.save(savedQuestion);
+                } catch (DataIntegrityViolationException ex) {
+                    throw new DataIntegrityViolationException(ex.getLocalizedMessage());
+                }
             }
-            catch (DataIntegrityViolationException ex){
-                throw new DataIntegrityViolationException(ex.getLocalizedMessage());
-            }
+            else
+                throw new ResourceNotFoundException(HttpStatus.BAD_REQUEST, "Company doesn't exist");
     }
 
     @Override
@@ -139,14 +148,20 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public QuestionRequest addQuestionRequest(QuestionRequest questionRequest) {
+    public QuestionRequest addQuestionRequest(Long userId, QuestionRequest questionRequest) {
+        QuestionRequest request = new QuestionRequest();
+        request.setDescription(questionRequest.getDescription());
+        request.setAnswer(questionRequest.getAnswer());
+        request.setUserId(userId);
+
         String companyName = questionRequest.getCompanyName();
 
         Company savedCompany = getCompany(companyName);
 
         if(savedCompany!=null) {
             try {
-                return questionRequestDao.save(questionRequest);
+                request.setCompanyName(companyName);
+                return questionRequestDao.save(request);
             }
             catch (DataIntegrityViolationException ex) {
                 throw new DataIntegrityViolationException(ex.getLocalizedMessage());
@@ -154,6 +169,11 @@ public class UserServiceImpl implements UserService{
         }
         else
             throw new ResourceNotFoundException(HttpStatus.BAD_REQUEST, "Company doesn't exist");
+    }
+
+    @Override
+    public List<QuestionRequest> getAllRequests(Long userId) {
+        return questionRequestDao.findByUserId(userId);
     }
 
     @Override

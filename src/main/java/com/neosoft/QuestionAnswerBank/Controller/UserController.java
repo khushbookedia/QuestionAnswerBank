@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
@@ -21,26 +22,28 @@ public class UserController {
     private final UserService userService;
 
 
-    @GetMapping("/company")
+//    @GetMapping("/company")
+//    @PreAuthorize("hasRole('ROLE_USER')")
+//    public ResponseEntity<List<Company>> getAllCompanies(){
+//        return ResponseEntity.ok(userService.getAllCompanies());
+//    }
+
+
+
+//    @GetMapping("/questions")
+//    @PreAuthorize("hasRole('ROLE_USER')")
+//    public ResponseEntity<List<Question>> getAllQuestions(){
+//        return ResponseEntity.ok(userService.getAllQuestions());
+//    }
+
+
+    @PostMapping("/requests/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<Company>> getAllCompanies(){
-        return ResponseEntity.ok(userService.getAllCompanies());
-    }
-
-
-
-    @GetMapping("/questions")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<Question>> getAllQuestions(){
-        return ResponseEntity.ok(userService.getAllQuestions());
-    }
-
-
-    @PostMapping("/requests")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<QuestionRequest> addQuestionRequest(@Valid @RequestBody QuestionRequest questionRequest){
+    public ResponseEntity<QuestionRequest> addQuestionRequest(@Valid @PathVariable Long id, @RequestBody QuestionRequest questionRequest){
         try{
-            return ResponseEntity.ok(userService.addQuestionRequest(questionRequest));
+
+
+            return ResponseEntity.ok(userService.addQuestionRequest(id, questionRequest));
 
         }
             catch(DataIntegrityViolationException ex){
@@ -48,14 +51,20 @@ public class UserController {
         }
     }
 
-
-
-    @GetMapping("/questions/{companyName}")
+    @GetMapping("/requests/{userId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<Question>> getQuestionsByCompanyName(@PathVariable String companyName){
+    public ResponseEntity<List<QuestionRequest>> getAllQuestionRequests(@PathVariable Long userId){
 
-        return ResponseEntity.ok(userService.getQuestionByCompanyName(companyName));
+        return ResponseEntity.ok(userService.getAllRequests());
     }
+
+
+//    @GetMapping("/questions/{companyName}")
+//    @PreAuthorize("hasRole('ROLE_USER')")
+//    public ResponseEntity<List<Question>> getQuestionsByCompanyName(@PathVariable String companyName){
+//
+//        return ResponseEntity.ok(userService.getQuestionByCompanyName(companyName));
+//    }
 
 
 

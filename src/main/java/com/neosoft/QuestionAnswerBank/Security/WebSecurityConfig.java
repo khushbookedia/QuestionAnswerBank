@@ -41,12 +41,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors().and().csrf().disable()
+                .cors().and()
+                .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/v1/admin/").hasRole(ADMIN.name())
                 .antMatchers("/api/v1/user/").hasRole(USER.name())
+                .antMatchers("/api/v1/all/**").permitAll()
                 .anyRequest().authenticated();
 //                .and()
 //                .rememberMe()
